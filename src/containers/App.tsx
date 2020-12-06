@@ -8,8 +8,7 @@ import CssBaseLine from "@material-ui/core/CssBaseline";
 const theme = createMuiTheme({
   palette: {
     secondary: {
-      // This is green.A700 as hex.
-      main: "#424242",
+      main: "#212121",
     },
   },
 });
@@ -19,6 +18,7 @@ const App = (): JSX.Element => {
     <RecoilRoot>
       <Suspense fallback={<Loading />}>
         <ThemeProvider theme={theme}>
+          <CssBaseLine />
           <Routes />
         </ThemeProvider>
       </Suspense>

@@ -6,6 +6,7 @@ import {
   AppBar,
   IconButton,
   Typography,
+  Badge,
   Menu,
   MenuItem,
   createStyles,
@@ -13,19 +14,33 @@ import {
   Theme,
   Button,
   ButtonGroup,
-  Drawer,
   Grid,
   Divider,
+  InputBase,
+  fade,
+  LinearProgress,
+  CircularProgress,
 } from "@material-ui/core";
 
-import { AccountCircle, ShoppingCartRounded, Face } from "@material-ui/icons";
+import {
+  AccountCircle,
+  ShoppingCartRounded,
+  Face,
+  Search,
+  SearchRounded,
+} from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
 import { useHistory } from "react-router-dom";
-import React, { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { accountState, cartState } from "../containers/state";
+import CustomizeDrawer from "./CustomizeDrawer";
+import React, { useEffect, useState } from "react";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      paddingTop: theme.spacing(5),
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -43,19 +58,101 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       padding: theme.spacing(2),
     },
+    search: {
+      position: "relative",
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      "&:hover": {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginRight: theme.spacing(2),
+      marginLeft: 0,
+      width: "100%",
+      [theme.breakpoints.up("sm")]: {
+        marginLeft: theme.spacing(3),
+        width: "auto",
+      },
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: "100%",
+      position: "absolute",
+      pointerEvents: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    inputRoot: {
+      color: "inherit",
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create("width"),
+      width: "100%",
+      [theme.breakpoints.up("md")]: {
+        width: "20ch",
+      },
+    },
+    sectionDesktop: {
+      display: "none",
+      [theme.breakpoints.up("md")]: {
+        display: "flex",
+      },
+    },
+    sectionMobile: {
+      display: "flex",
+      [theme.breakpoints.up("md")]: {
+        display: "none",
+      },
+    },
   })
 );
 
 const CustomizeAppBar = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
-  const [auth, setAuth] = React.useState(true);
+  const account = useRecoilValue(accountState);
+  const [auth, setAuth] = React.useState(false);
+  const setAccountState = useSetRecoilState(accountState);
   const [drawerOpenState, setDrawerOpenState] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [signOut, setSignOut] = useState<string>("Sign out");
+  const [cart] = useRecoilState(cartState);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
   const open = Boolean(anchorEl);
 
+  useEffect(() => {
+    if (account.name && account.email && account.address && account.phone) {
+      setAuth(true);
+    }
+  }, [account]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  const defaultAccountState = {
+    name: "",
+    email: "",
+    address: "",
+    id: -1,
+    password: "",
+    phone: "",
+  };
   const handleChange = () => {
-    setAuth(!auth);
+    setIsLoading(true);
+    setSignOut("...");
+    setTimeout(() => {
+      setIsLoading(false);
+
+      setAuth(!auth);
+      setAccountState(defaultAccountState);
+    }, 1500);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -65,9 +162,17 @@ const CustomizeAppBar = (): JSX.Element => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleKeyPress = (event: any): void => {
+    if (event.key === "Enter") {
+      history.push({
+        pathname: "/search",
+        state: { query: event.target.value },
+      });
+    }
+  };
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="secondary">
+      <AppBar position="fixed" elevation={6} color="secondary">
         <Toolbar>
           <IconButton
             edge="start"
@@ -77,12 +182,35 @@ const CustomizeAppBar = (): JSX.Element => {
           >
             <MenuIcon />
           </IconButton>
+          <Button
+            variant="text"
+            onClick={() => {
+              history.push("/");
+            }}
+          >
+            <img
+              src="https://www.upsieutoc.com/images/2020/12/04/gamehub.png"
+              height="35px"
+            />
+          </Button>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <Search />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              onKeyPress={(e) => handleKeyPress(e)}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </div>
+
           <Typography variant="h6" className={classes.title}></Typography>
           {auth ? (
             <div>
-              <IconButton color="inherit">
-                <ShoppingCartRounded onClick={() => history.push("./cart")} />
-              </IconButton>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -116,12 +244,10 @@ const CustomizeAppBar = (): JSX.Element => {
                       <Face fontSize="large" />
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography variant="h6">Vu Nguyen </Typography>
+                      <Typography variant="h6"> {account.name} </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography variant="body2">
-                        nguyenquocvu@gmail.com{" "}
-                      </Typography>
+                      <Typography variant="body2">{account.email}</Typography>
                     </Grid>
                   </Grid>
                 </MenuItem>
@@ -133,7 +259,7 @@ const CustomizeAppBar = (): JSX.Element => {
                     onClick={handleChange}
                     color="default"
                   >
-                    Sign out
+                    {signOut}
                   </Button>
                 </MenuItem>
               </Menu>
@@ -149,7 +275,7 @@ const CustomizeAppBar = (): JSX.Element => {
                 color="inherit"
                 variant="contained"
                 onClick={() => {
-                  history.push("./login");
+                  history.push("/login");
                 }}
               >
                 Login
@@ -159,22 +285,28 @@ const CustomizeAppBar = (): JSX.Element => {
                 style={{ textTransform: "none", fontWeight: "lighter" }}
                 color="inherit"
                 onClick={() => {
-                  history.push("./register");
+                  history.push("/register");
                 }}
               >
                 Register
               </Button>
             </div>
           )}
+          <IconButton color="inherit">
+            <Badge badgeContent={cart.length} color="error">
+              {console.log(cart)}
+              <ShoppingCartRounded onClick={() => history.push("/cart")} />
+            </Badge>
+          </IconButton>
         </Toolbar>
+        {isLoading ? <LinearProgress color="secondary" /> : <></>}
       </AppBar>
-      <Drawer
-        anchor={"left"}
-        open={drawerOpenState}
-        onClose={(): void => setDrawerOpenState(false)}
-      >
-        test
-      </Drawer>
+      <CustomizeDrawer
+        drawerOpenState={drawerOpenState}
+        setDrawerOpenState={(): void => {
+          setDrawerOpenState(false);
+        }}
+      />
     </div>
   );
 };

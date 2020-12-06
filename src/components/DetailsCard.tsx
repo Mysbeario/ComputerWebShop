@@ -10,10 +10,15 @@ import {
   AccordionDetails,
   AccordionSummary,
   Accordion,
+  CardActionArea,
+  Snackbar,
+  useTheme,
 } from "@material-ui/core";
-import React from "react";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import React, { useState } from "react";
+import { useRecoilState } from "recoil";
+import { cartState } from "../containers/state";
+import { useHistory } from "react-router-dom";
+import { addToCart, moneyFormater } from "./ReuseableFunction";
 
 const useStyles = makeStyles({
   root: {
@@ -30,52 +35,89 @@ const useStyles = makeStyles({
   },
 });
 
-const DetailsCard = (): JSX.Element => {
+const DetailsCard = ({ product }: any): JSX.Element => {
   const classes = useStyles();
+  const [quantity, setQuantity] = useState<number>(1);
+  const [cart, setCart] = useRecoilState(cartState);
+  const [open, setOpen] = useState(false);
+  const history = useHistory();
+  const theme = useTheme();
 
+  const AddToCarthandle = () => {
+    const newCart: any[] = addToCart(cart, product, quantity);
+    setCart(newCart);
+    setOpen(true);
+  };
+
+  const onBuyHandle = () => {
+    const newCart: any[] = addToCart(cart, product, quantity);
+    setCart(newCart);
+    setOpen(true);
+    history.push("/cart");
+  };
+
+  const onQuantityChange = (command: boolean): void => {
+    if (quantity === 1 && command === false) {
+    } else {
+      command ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
+    }
+  };
   return (
-    <Card className={classes.root} elevation={0}>
-      <CardContent>
-        <Typography variant="h4" gutterBottom>
-          Macbook Pro 2018
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          21.900.000 VND
-        </Typography>
-        <Accordion className={classes.pos} elevation={3} color="secondary">
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography className={classes.pos}>
-              Đặc tính kỹ thuật
-            </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
-
-        <ButtonGroup variant="outlined" disableElevation color="primary">
-          <Button>+</Button>
-          <Button>1</Button>
-          <Button>-</Button>
-        </ButtonGroup>
-      </CardContent>
-      <CardActions>
-        <Button variant="contained" color="secondary">
-          Mua Ngay
-        </Button>
-        <Button variant="outlined" color="secondary">
-          Thêm vào giỏ hàng
-        </Button>
-      </CardActions>
-    </Card>
+    <div>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={open}
+        autoHideDuration={1000}
+        onClose={() => setOpen(false)}
+        message="Item is added to your cart!"
+        key={"top" + "center"}
+      />
+      <Card className={classes.root} elevation={0}>
+        <CardContent>
+          <Typography variant="h4" gutterBottom>
+            {product.name}
+          </Typography>
+          <Typography variant="h5" gutterBottom>
+            {moneyFormater(product.price)}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            {product.description}
+          </Typography>
+          <Typography variant="h4" gutterBottom>
+            <ButtonGroup
+              color="default"
+              aria-label="outlined primary button group"
+            >
+              <Button onClick={() => onQuantityChange(false)}>-</Button>
+              <Button>{quantity}</Button>
+              <Button onClick={() => onQuantityChange(true)}>+</Button>
+            </ButtonGroup>
+          </Typography>
+          <CardActions>
+            <Button
+              size="large"
+              fullWidth
+              variant="contained"
+              color="primary"
+              onClick={() => onBuyHandle()}
+            >
+              Buy
+            </Button>
+            <Button
+              size="large"
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={() => AddToCarthandle()}
+            >
+              Add to cart
+            </Button>
+          </CardActions>
+          <Typography variant="h5"></Typography>
+        </CardContent>
+        <CardActions></CardActions>
+      </Card>
+    </div>
   );
 };
 
