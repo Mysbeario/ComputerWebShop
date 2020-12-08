@@ -24,12 +24,17 @@ import {
   addToCart,
   removeFromCart,
   dropItem,
+  addComboToCart,
+  removeComboFromCart,
+  dropCombo,
 } from "./ReuseableFunction";
+
 import { useRecoilState } from "recoil";
 import { cartState } from "../containers/state";
 import { useHistory } from "react-router-dom";
-import { CartState } from "../interfaces";
+import { CartState, Combo, Product } from "../interfaces";
 import { number } from "prop-types";
+import Carousel from "react-material-ui-carousel";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -64,48 +69,57 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ProductCard = (item: any): JSX.Element => {
+const ComboCart = (item: any): JSX.Element => {
   const classes = useStyles();
   const [cart, setCart] = useRecoilState(cartState);
   const history = useHistory();
   const theme = useTheme();
 
   const onIncrease = () => {
-    const newCart: CartState = addToCart(cart, item.product, 1);
+    const newCart: CartState = addComboToCart(cart, item.combo, 1);
     setCart(newCart);
   };
   const onDecrease = () => {
-    const newCart: CartState = removeFromCart(cart, item.product);
+    const newCart: CartState = removeComboFromCart(cart, item.combo, 1);
     setCart(newCart);
   };
   const onDrop = () => {
-    const newCart: CartState = dropItem(cart, item.product);
+    const newCart: CartState = dropCombo(cart, item.combo);
     setCart(newCart);
   };
   return (
     <div className={classes.details}>
       <Box>
         <Card className={classes.root} elevation={0}>
-          <CardMedia
-            className={classes.cover}
-            src={
-              item.product.image
-                ? "http://localhost:5000/api/image/" + item.product.image
-                : ""
-            }
-            component="img"
-          />
+          <Carousel>
+            {item.combo.details.map((item: any) => {
+              console.log("item");
+              console.log(item);
+
+              return (
+                <CardMedia
+                  className={classes.cover}
+                  src={
+                    item.product.image
+                      ? "http://localhost:5000/api/image/" + item.product.image
+                      : ""
+                  }
+                  component="img"
+                />
+              );
+            })}
+          </Carousel>
           <div className={classes.details}>
             <CardContent>
               <Typography component="div" variant="h6">
-                {item.product.name}
+                {item.combo.name}
               </Typography>
               <Typography
                 variant="subtitle1"
                 color="textSecondary"
                 component="div"
               >
-                {moneyFormater(item.product.price)}
+                {moneyFormater(item.combo.price)}
               </Typography>
               <ButtonGroup variant="outlined" disableElevation color="default">
                 <Button onClick={() => onDecrease()}>-</Button>
@@ -123,7 +137,7 @@ const ProductCard = (item: any): JSX.Element => {
     </div>
   );
 };
-export default ProductCard;
+export default ComboCart;
 
 // {each.details.map((item: any) => {
 //   return (
@@ -132,9 +146,9 @@ export default ProductCard;
 //         <CardMedia
 //           className={classes.cover}
 //           src={
-//             item.product.image
+//             item.combo.image
 //               ? "http://localhost:5000/api/image/" +
-//                 item.product.image
+//                 item.combo.image
 //               : ""
 //           }
 //           component="img"
@@ -145,14 +159,14 @@ export default ProductCard;
 //               {"#" + number++ + ". "}
 //             </Typography>
 //             <Typography component="div" variant="h6">
-//               {item.product.name}
+//               {item.combo.name}
 //             </Typography>
 //             <Typography
 //               variant="subtitle1"
 //               color="textSecondary"
 //               component="div"
 //             >
-//               {moneyFormater(item.product.price)}
+//               {moneyFormater(item.combo.price)}
 //             </Typography>
 //           </CardContent>
 //         </div>

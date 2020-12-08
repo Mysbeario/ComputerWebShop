@@ -11,15 +11,10 @@ import {
 
 import React from "react";
 import ProductCard from "../../../components/ProductCard";
+
+import ComboCard from "../../../components/ComboCard";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  amount: number;
-  image: string;
-}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -34,18 +29,50 @@ const OnCartList = ({ cart }: any): JSX.Element => {
     <Paper elevation={3} className={classes.paper}>
       <List
         subheader={
-          <Typography
-            variant="h5"
-            component="h4"
-            color="textSecondary"
-            gutterBottom
-          >
+          <Typography variant="h5" component="h4" color="inherit" gutterBottom>
             Cart items
           </Typography>
         }
       >
         <Divider />
-        {cart.map((item: any) => (
+        <ListItem>
+          {console.log(cart)}
+          {cart.combo.length != 0 ? (
+            <Typography
+              variant="h6"
+              component="h4"
+              color="inherit"
+              gutterBottom
+            >
+              Combo
+            </Typography>
+          ) : (
+            <></>
+          )}
+        </ListItem>
+
+        {cart.combo.map((combo: any) => (
+          <ListItem key={combo.combo.id}>
+            <ComboCard {...combo} />
+          </ListItem>
+        ))}
+        <ListItem>
+          {console.log(cart)}
+          {cart.product.length != 0 ? (
+            <Typography
+              variant="h6"
+              component="h4"
+              color="inherit"
+              gutterBottom
+            >
+              Products
+            </Typography>
+          ) : (
+            <></>
+          )}
+        </ListItem>
+
+        {cart.product.map((item: any) => (
           <ListItem key={item.id}>
             <ProductCard {...item} />
           </ListItem>

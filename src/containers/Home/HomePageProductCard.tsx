@@ -18,6 +18,7 @@ import { cartState } from "../../containers/state";
 import { addToCart } from "../../components/ReuseableFunction";
 import { useRecoilState } from "recoil";
 import { any } from "prop-types";
+import { Product } from "../../interfaces";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
+    },
+    card: {
+      minHeight: "400px",
     },
   })
 );
@@ -40,22 +44,14 @@ const formatString = (number: any): any => {
   return formatter.format(number);
 };
 
-interface Props {
-  name: string;
-  price: number;
-  image: string;
-  amount: number;
-  id: number;
-  description: string;
-}
-
-const HomePageProductCard = (props: Props): JSX.Element => {
+const HomePageProductCard = (props: Product): JSX.Element => {
   const [cart, setCart] = useRecoilState(cartState);
+  const classes = useStyles();
   let history = useHistory();
   const [open, setOpen] = useState(false);
 
-  const handleAddButton = (item: Props) => {
-    const newCart: any[] = addToCart(cart, item, 1);
+  const handleAddButton = (item: Product) => {
+    const newCart = addToCart(cart, item, 1);
     setCart(newCart);
     setOpen(true);
   };
@@ -79,20 +75,24 @@ const HomePageProductCard = (props: Props): JSX.Element => {
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
-              height="150"
+              height="240"
               width="150"
               src={"http://localhost:5000/api/image/" + props.image}
               title="None"
             />
-            <CardContent>
-              <Typography
-                variant="body1"
-                style={{ fontWeight: 500 }}
-                align="center"
-                component="h6"
+            <CardContent style={{ height: 130 }}>
+              <Box
+                component="div"
+                textOverflow="ellipsis"
+                overflow="hidden"
+                style={{ textAlign: "center" }}
+                height="70"
+                fontWeight="fontWeightBold"
+                fontSize="body1.fontSize"
               >
                 {props.name}
-              </Typography>
+              </Box>
+
               <Box>
                 <Typography
                   variant="body1"

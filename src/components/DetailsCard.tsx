@@ -19,6 +19,7 @@ import { useRecoilState } from "recoil";
 import { cartState } from "../containers/state";
 import { useHistory } from "react-router-dom";
 import { addToCart, moneyFormater } from "./ReuseableFunction";
+import { CartState } from "../interfaces";
 
 const useStyles = makeStyles({
   root: {
@@ -44,13 +45,13 @@ const DetailsCard = ({ product }: any): JSX.Element => {
   const theme = useTheme();
 
   const AddToCarthandle = () => {
-    const newCart: any[] = addToCart(cart, product, quantity);
+    const newCart: CartState = addToCart(cart, product, quantity);
     setCart(newCart);
     setOpen(true);
   };
 
   const onBuyHandle = () => {
-    const newCart: any[] = addToCart(cart, product, quantity);
+    const newCart: CartState = addToCart(cart, product, quantity);
     setCart(newCart);
     setOpen(true);
     history.push("/cart");

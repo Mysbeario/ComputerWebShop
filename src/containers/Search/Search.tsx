@@ -18,6 +18,9 @@ import CustomizeCarousel from "../../components/CustomizeCarousel";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Axios from "axios";
 import { useParams } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { searchState } from "../state";
+import Product from "./Product";
 
 interface IState {
   query?: string;
@@ -41,19 +44,26 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Params {
   search: string;
 }
+const SearchTextFormater = (key: string, value: string, product: any) => {
+  if (key === "search") {
+    return product.length + " result for " + "'" + value + "'";
+  }
+};
 const Search = (): JSX.Element => {
   const classes = useStyles();
-  const url = "http://localhost:5000/api/product";
-
+  const url = "http://localhost:5000/api/product/?";
+  const [searchString] = useRecoilState(searchState);
   const [product, setProduct] = useState([]);
-  const location = useLocation();
-  const message = (location.state as IState).query;
   useEffect(() => {
     (async () => {
-      const respone = await Axios.get(url);
+      const respone = await Axios.get(
+        url + searchString.key + "=" + searchString.value
+      );
+      console.log(respone);
+      console.log(url + searchString.key + "=" + searchString.value);
       setProduct(respone.data);
     })();
-  }, []);
+  }, [searchString]);
 
   return (
     <div>
@@ -62,8 +72,19 @@ const Search = (): JSX.Element => {
       <Container className={classes.p}>
         <Grid container spacing={4}>
           <Grid item md={3} sm={12}>
-            Searching "{message}"
+            <Typography variant="h6">
+              {SearchTextFormater(
+                searchString.key,
+                searchString.value,
+                product
+              )}
+            </Typography>
           </Grid>
+          {product.map((item) => (
+            <Grid item md={12} sm={12}>
+              <Product {...item} />
+            </Grid>
+          ))}
         </Grid>
       </Container>
     </div>

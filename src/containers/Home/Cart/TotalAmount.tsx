@@ -27,21 +27,28 @@ const TotalAmount = (): JSX.Element => {
   const [cart] = useRecoilState(cartState);
   const getTotal = () => {
     let total = 0;
-    cart.forEach((item: any) => {
+    cart.product.forEach((item: any) => {
       total = item.product.price * item.quantity + total;
+    });
+    cart.combo.forEach((item: any) => {
+      total = item.combo.originPrice * item.quantity + total;
     });
     return total;
   };
+  const getDiscount = () => {
+    let total = 0;
+    cart.combo.forEach((item: any) => {
+      total =
+        (item.combo.originPrice - item.combo.price) * item.quantity + total;
+    });
+    return total;
+  };
+
   return (
     <Paper elevation={3} className={classes.paper}>
       <List
         subheader={
-          <Typography
-            variant="h5"
-            component="h4"
-            color="textSecondary"
-            gutterBottom
-          >
+          <Typography variant="h5" component="h4" color="inherit" gutterBottom>
             The total amount of
           </Typography>
         }
@@ -53,6 +60,13 @@ const TotalAmount = (): JSX.Element => {
             {moneyFormater(getTotal())}
           </ListItemSecondaryAction>
         </ListItem>
+        <ListItem>
+          <ListItemText>Discount</ListItemText>
+          <ListItemSecondaryAction>
+            -{moneyFormater(getDiscount())}
+          </ListItemSecondaryAction>
+        </ListItem>
+        <Divider />
 
         <ListItem>
           <ListItemText>Shipping</ListItemText>
@@ -64,7 +78,7 @@ const TotalAmount = (): JSX.Element => {
             primary={<Typography variant="body2">Total</Typography>}
           ></ListItemText>
           <ListItemSecondaryAction>
-            {moneyFormater(getTotal())}
+            {moneyFormater(getTotal() - getDiscount())}
           </ListItemSecondaryAction>
         </ListItem>
         <ListItem>

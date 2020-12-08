@@ -23,9 +23,7 @@ import { cartState } from "../state";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    grid: {
-      paddingLeft: theme.spacing(4),
-    },
+    grid: {},
     p: {
       paddingTop: theme.spacing(8),
       paddingLeft: theme.spacing(4),
@@ -66,17 +64,19 @@ const Home = (): JSX.Element => {
             />
           </Grid>
           <Grid item md={3} sm={12}>
-            <Box
-              border={1}
-              borderColor="text.secondary"
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
               height="92%"
-              bgcolor="text.primary"
-              borderRadius={5}
-            ></Box>
+              width="100%"
+              src="https://www.upsieutoc.com/images/2020/12/06/280x260-Uudailenovo-2020.png"
+              title="Contemplative Reptile"
+            />
           </Grid>
           <Grid item md={9} sm={12}>
             <CustomizeCarousel />
           </Grid>
+
           <Grid item md={12} sm={12}>
             <Typography variant="h5" gutterBottom>
               New Arrival
@@ -84,10 +84,19 @@ const Home = (): JSX.Element => {
             <Divider />
           </Grid>
           {product.map((each: any) => (
-            <Grid item md={3} sm={12}>
+            <Grid className={classes.grid} item md={3} sm={12}>
               <HomePageProductCard {...each} />
             </Grid>
           ))}
+          <Grid item md={12} sm={12}>
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
+              height="65"
+              src="https://www.upsieutoc.com/images/2020/12/06/1200x65-Sale-me-ly-new.png"
+              title="Contemplative Reptile"
+            />
+          </Grid>
           <Grid item md={12} sm={12}>
             <Typography variant="h5" gutterBottom>
               On Sale

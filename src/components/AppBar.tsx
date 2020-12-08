@@ -32,7 +32,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import { useHistory } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { accountState, cartState } from "../containers/state";
+import { accountState, cartState, searchState } from "../containers/state";
 import CustomizeDrawer from "./CustomizeDrawer";
 import React, { useEffect, useState } from "react";
 
@@ -109,6 +109,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const getCartLength = (cart: any) => {
+  let length = 0;
+  cart.product.map((item: any) => {
+    length = item.quantity + length;
+  });
+  cart.combo.map((item: any) => {
+    length = item.quantity + length;
+  });
+  return length;
+};
+
 const CustomizeAppBar = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
@@ -120,7 +131,8 @@ const CustomizeAppBar = (): JSX.Element => {
   const [signOut, setSignOut] = useState<string>("Sign out");
   const [cart] = useRecoilState(cartState);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const setSearchState = useSetRecoilState(searchState);
+  const setCart = useSetRecoilState(cartState);
   const open = Boolean(anchorEl);
 
   useEffect(() => {
@@ -152,6 +164,10 @@ const CustomizeAppBar = (): JSX.Element => {
 
       setAuth(!auth);
       setAccountState(defaultAccountState);
+      setCart({
+        product: [],
+        combo: [],
+      });
     }, 1500);
   };
 
@@ -164,9 +180,9 @@ const CustomizeAppBar = (): JSX.Element => {
   };
   const handleKeyPress = (event: any): void => {
     if (event.key === "Enter") {
+      setSearchState({ key: "search", value: event.target.value });
       history.push({
         pathname: "/search",
-        state: { query: event.target.value },
       });
     }
   };
@@ -293,13 +309,13 @@ const CustomizeAppBar = (): JSX.Element => {
             </div>
           )}
           <IconButton color="inherit">
-            <Badge badgeContent={cart.length} color="error">
+            <Badge badgeContent={getCartLength(cart)} color="error">
               {console.log(cart)}
               <ShoppingCartRounded onClick={() => history.push("/cart")} />
             </Badge>
           </IconButton>
         </Toolbar>
-        {isLoading ? <LinearProgress color="secondary" /> : <></>}
+        {isLoading ? <LinearProgress color="primary" /> : <></>}
       </AppBar>
       <CustomizeDrawer
         drawerOpenState={drawerOpenState}

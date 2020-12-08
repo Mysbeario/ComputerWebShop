@@ -1,4 +1,5 @@
 import { atom, selector } from "recoil";
+import { CartState, Product } from "../interfaces";
 
 interface AccountState {
   id: number;
@@ -21,10 +22,25 @@ const accountState = atom<AccountState>({
   },
 });
 
-const cartState = atom<any>({
+const cartState = atom<CartState>({
   key: "cart",
-  default: [],
+  default: {
+    product: [],
+    combo: [],
+  },
 });
 
-export { accountState, cartState };
-export type { AccountState };
+interface SearchState {
+  key: string;
+  value: string;
+}
+const searchState = atom<SearchState>({
+  key: "searchState",
+  default: {
+    key: "search",
+    value: " ",
+  },
+});
+
+export { accountState, cartState, searchState };
+export type { AccountState, SearchState };

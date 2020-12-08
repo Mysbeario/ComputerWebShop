@@ -18,6 +18,9 @@ import {
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { searchState } from "../containers/state";
+import { useHistory } from "react-router-dom";
 interface Props {
   drawerOpenState: boolean;
   setDrawerOpenState: () => void;
@@ -41,6 +44,8 @@ const CustomizeDrawer = ({
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const url = "http://localhost:5000/api/category";
+  const setSearchState = useSetRecoilState(searchState);
+  const history = useHistory();
   const [category, setCategory] = useState([]);
 
   useEffect(() => {
@@ -49,6 +54,12 @@ const CustomizeDrawer = ({
       setCategory(respone.data);
     })();
   }, []);
+
+  const onCategoryClick = (categoryId: string) => {
+    setSearchState({ key: "category", value: categoryId });
+    setDrawerOpenState();
+    history.push("/search");
+  };
 
   const handleClick = () => {
     setOpen(!open);
@@ -89,7 +100,12 @@ const CustomizeDrawer = ({
             <List component="div" disablePadding>
               {category.map((c: any) => (
                 <ListItem key={c.id} button className={classes.nested}>
-                  <ListItemText primary={c.name} />
+                  <ListItemText
+                    primary={c.name}
+                    onClick={() => {
+                      onCategoryClick(c.id);
+                    }}
+                  />
                 </ListItem>
               ))}
             </List>
