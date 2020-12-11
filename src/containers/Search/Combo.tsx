@@ -15,10 +15,11 @@ import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import AddShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import { useHistory } from "react-router-dom";
 import { cartState } from "../../containers/state";
-import { addToCart } from "../../components/ReuseableFunction";
+import { addComboToCart, addToCart } from "../../components/ReuseableFunction";
 import { useRecoilState } from "recoil";
 import { any } from "prop-types";
-import { Product } from "../../interfaces";
+import { Combo as Combo } from "../../interfaces";
+import Carousel from "react-material-ui-carousel";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
@@ -44,14 +45,14 @@ const formatString = (number: any): any => {
   return formatter.format(number);
 };
 
-const Product = (props: Product): JSX.Element => {
+const Combo = (props: any): JSX.Element => {
   const [cart, setCart] = useRecoilState(cartState);
   const classes = useStyles();
   let history = useHistory();
   const [open, setOpen] = useState(false);
 
-  const handleAddButton = (item: Product) => {
-    const newCart = addToCart(cart, item, 1);
+  const handleAddButton = (item: any) => {
+    const newCart = addComboToCart(cart, item, 1);
     setCart(newCart);
     setOpen(true);
   };
@@ -72,14 +73,25 @@ const Product = (props: Product): JSX.Element => {
               history.push("product/" + props.id);
             }}
           >
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
-              height="240"
-              width="150"
-              src={"http://localhost:5000/api/image/" + props.image}
-              title="None"
-            />
+            <Carousel>
+              {props.details.map((item: any) => {
+                console.log("item");
+                console.log(item);
+
+                return (
+                  <CardMedia
+                    //className={classes.cover}
+                    src={
+                      item.product.image
+                        ? "http://localhost:5000/api/image/" +
+                          item.product.image
+                        : ""
+                    }
+                    component="img"
+                  />
+                );
+              })}
+            </Carousel>
             <CardContent style={{ height: 130, textAlign: "center" }}>
               <Box
                 component="div"
@@ -128,4 +140,4 @@ const Product = (props: Product): JSX.Element => {
     </div>
   );
 };
-export default Product;
+export default Combo;

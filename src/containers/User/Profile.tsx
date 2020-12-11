@@ -14,6 +14,13 @@ import {
   Paper,
   Snackbar,
 } from "@material-ui/core";
+import {
+  AccountCircle,
+  ShoppingCartRounded,
+  Face,
+  Search,
+  SearchRounded,
+} from "@material-ui/icons";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Axios from "axios";
 import { useForm } from "react-hook-form";
@@ -32,8 +39,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: theme.spacing(4),
+
     padding: theme.spacing(4),
+  },
+  flex:
+  {
+      display: "flex"
   },
   avatar: {
     margin: theme.spacing(1),
@@ -46,12 +57,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  p: {
-    paddingTop: theme.spacing(4),
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-  },
+  p: {},
 }));
 
 interface RegisterInfo {
@@ -67,18 +73,27 @@ const options = {
   },
 };
 
+
 const Login = (): JSX.Element => {
   const classes = useStyles();
   const history = useHistory();
 
   const account = useRecoilValue(accountState);
-  const { register, errors, handleSubmit } = useForm<RegisterInfo>();
+  const { register, errors, handleSubmit,setValue } = useForm<RegisterInfo>();
   const setAccountState = useSetRecoilState(accountState);
+  const [isEditable, setIsEditable] = useState(false);
   const [openAlert, setOpenAlert] = useState(0);
-  const handleLogin = async (registerInfo: RegisterInfo): Promise<void> => {
+
+  const setDefaultValue=()=>
+{
+    setValue("name",account.name);
+    setValue( "phone", account.phone);
+    setValue( "email", account.email);
+}
+
+  const handleUpdate = async (registerInfo: RegisterInfo): Promise<void> => {
     try {
-      console.log(registerInfo);
-      const id = await Axios.post(
+      const id = await Axios.put(
         "http://localhost:5000/api/customer",
         registerInfo,
         options
@@ -102,14 +117,9 @@ const Login = (): JSX.Element => {
       setOpenAlert(1);
     }
   };
-  useEffect(() => {
-    if (account.name && account.email && account.address && account.phone) {
-      history.push("/");
-    }
-  }, [account]);
+
   return (
     <>
-      <AppBar />
       <Container component="main" maxWidth="xs" className={classes.p}>
         <Snackbar
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -129,63 +139,19 @@ const Login = (): JSX.Element => {
           </Alert>
         </Snackbar>
         <Paper className={classes.paper} elevation={7}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
+            My Profile
           </Typography>
-          <form className={classes.form} onSubmit={handleSubmit(handleLogin)}>
+          <form className={classes.form} onSubmit={handleSubmit(handleUpdate)}>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              inputRef={register({
-                pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                required: true,
-              })}
-              error={!!errors.email}
-            />
-            {errors.email && (
-              <Typography align="center" color="primary">
-                Please enter valid email address !
-              </Typography>
-            )}
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              inputRef={register({
-                pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-
-                required: true,
-              })}
-              error={!!errors.password}
-            />
-            {errors.password && (
-              <Typography align="center" color="primary">
-                The password yo provided must have more than 6 characters{" "}
-              </Typography>
-            )}
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
+              defaultValue={account.name}
               name="name"
               label="Name"
+              InputProps={{ readOnly: !isEditable }}
               type="text"
               inputRef={register({ required: true })}
               error={!!errors.name}
@@ -196,7 +162,9 @@ const Login = (): JSX.Element => {
               required
               fullWidth
               name="address"
+              defaultValue={account.address}
               label="Address"
+              InputProps={{ readOnly: !isEditable }}
               type="text"
               inputRef={register({ required: true })}
               error={!!errors.address}
@@ -205,8 +173,10 @@ const Login = (): JSX.Element => {
               variant="outlined"
               margin="normal"
               required
+              InputProps={{ readOnly: !isEditable }}
               fullWidth
               name="phone"
+              defaultValue={account.phone}
               label="Phone"
               type="text"
               inputRef={register({
@@ -220,15 +190,49 @@ const Login = (): JSX.Element => {
                 Please enter valid pohne number !
               </Typography>
             )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="secondary"
-              className={classes.submit}
-            >
-              Register
-            </Button>
+            {isEditable ? (
+              <div className={classes.flex}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  color="secondary"
+                  className={classes.submit}
+                  onClick={() => {
+                    setIsEditable(true);
+                  }}
+                >
+                  Update
+                </Button>
+                <Button
+                  style={{ marginLeft: "9px" }}
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  className={classes.submit}
+                  onClick={() => {
+                    setIsEditable(false);
+                    setDefaultValue();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+                onClick={() => {
+                  setIsEditable(true);
+                }}
+              >
+                Edit Profile
+              </Button>
+            )}
           </form>
         </Paper>
         <Box mt={8}></Box>

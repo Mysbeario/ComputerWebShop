@@ -25,7 +25,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const OnCartList = ({ cart }: any): JSX.Element => {
   const classes = useStyles();
-  return (
+  console.log("cart ne");
+  console.log(cart.product.length);
+  console.log(cart.combo.length);
+  return cart.product.length == 0 && cart.combo.length == 0 ? (
+    <>
+      {" "}
+      <Typography
+        align="center"
+        variant="h5"
+        component="h4"
+        color="inherit"
+        gutterBottom
+      >
+        Cart is empty
+      </Typography>
+    </>
+  ) : (
     <Paper elevation={3} className={classes.paper}>
       <List
         subheader={
@@ -56,6 +72,7 @@ const OnCartList = ({ cart }: any): JSX.Element => {
             <ComboCard {...combo} />
           </ListItem>
         ))}
+        <Divider />
         <ListItem>
           {console.log(cart)}
           {cart.product.length != 0 ? (

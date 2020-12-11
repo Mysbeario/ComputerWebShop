@@ -80,14 +80,16 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
 
   const [cart, setCart] = useRecoilState(cartState);
 
+  const getProductCombo = async (): Promise<void> => {
+    const { data } = await Axios.get(url);
+    setCombo(data);
+  };
+
   useEffect(() => {
-    (async () => {
-      const { data } = await Axios.get(url);
-      console.log("combo");
-      setCombo(data);
-      console.log(data);
-    })();
-  }, []);
+    getProductCombo().catch((e) => {
+      getProductCombo();
+    });
+  }, [combo]);
 
   const handleAddButton = (cart: CartState, combo: Combo, quantity: number) => {
     const newCart = addComboToCart(cart, combo, quantity);
@@ -118,11 +120,7 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
           let number = 1;
           return (
             <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div>
                   <Typography
                     align="right"

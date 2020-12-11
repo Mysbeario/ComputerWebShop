@@ -80,12 +80,11 @@ const HomePageProductCard = (props: Product): JSX.Element => {
               src={"http://localhost:5000/api/image/" + props.image}
               title="None"
             />
-            <CardContent style={{ height: 130 }}>
+            <CardContent style={{ height: 130, textAlign: "center" }}>
               <Box
                 component="div"
                 textOverflow="ellipsis"
                 overflow="hidden"
-                style={{ textAlign: "center" }}
                 height="70"
                 fontWeight="fontWeightBold"
                 fontSize="body1.fontSize"

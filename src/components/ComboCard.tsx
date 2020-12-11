@@ -89,7 +89,7 @@ const ComboCart = (item: any): JSX.Element => {
   };
   return (
     <div className={classes.details}>
-      <Box>
+      <Box bgcolor="text.secondary">
         <Card className={classes.root} elevation={0}>
           <Carousel>
             {item.combo.details.map((item: any) => {
@@ -126,13 +126,12 @@ const ComboCart = (item: any): JSX.Element => {
                 <Button>{item.quantity}</Button>
                 <Button onClick={() => onIncrease()}>+</Button>
               </ButtonGroup>
-              <IconButton>
-                <DeleteIcon color="action" onClick={() => onDrop()} />
+              <IconButton onClick={() => onDrop()}>
+                <DeleteIcon color="action" />
               </IconButton>
             </CardContent>
           </div>
         </Card>
-        <Divider />
       </Box>
     </div>
   );

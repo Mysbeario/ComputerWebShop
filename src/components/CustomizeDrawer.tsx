@@ -18,8 +18,8 @@ import {
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { useSetRecoilState } from "recoil";
-import { searchState } from "../containers/state";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { searchState, categoryState } from "../containers/state";
 import { useHistory } from "react-router-dom";
 interface Props {
   drawerOpenState: boolean;
@@ -46,13 +46,15 @@ const CustomizeDrawer = ({
   const url = "http://localhost:5000/api/category";
   const setSearchState = useSetRecoilState(searchState);
   const history = useHistory();
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useRecoilState(categoryState);
+
+  const getCategory = async (): Promise<void> => {
+    const respone = await Axios(url);
+    setCategory(respone.data);
+  };
 
   useEffect(() => {
-    (async () => {
-      const respone = await Axios(url);
-      setCategory(respone.data);
-    })();
+    getCategory();
   }, []);
 
   const onCategoryClick = (categoryId: string) => {
@@ -88,8 +90,9 @@ const CustomizeDrawer = ({
           <ListItem button>
             <ListItemText primary="Home" />
           </ListItem>
+
           <ListItem button>
-            <ListItemText primary="Promotion" />
+            <ListItemText primary="Combo" />
           </ListItem>
           <Divider />
           <ListItem button onClick={handleClick}>

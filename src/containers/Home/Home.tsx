@@ -39,13 +39,15 @@ const Home = (): JSX.Element => {
   const classes = useStyles();
   const url = "http://localhost:5000/api/product";
   const [product, setProduct] = useState([]);
-
+  const getProducts = async (): Promise<void> => {
+    const respone = await Axios.get(url);
+    setProduct(respone.data);
+  };
   useEffect(() => {
-    (async () => {
-      const respone = await Axios.get(url);
-      setProduct(respone.data);
-    })();
-  }, []);
+    getProducts().catch(() => {
+      getProducts();
+    });
+  }, [product]);
 
   return (
     <div>

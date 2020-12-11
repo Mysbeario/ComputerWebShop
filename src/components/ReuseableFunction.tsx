@@ -136,7 +136,7 @@ const dropCombo = (cart: any, item: Combo): any => {
   const foundItem = cart.combo.find((x: any) => x.combo.id === item.id);
 
   if (foundItem && foundItem.quantity >= 1) {
-    const data = [...cart.product];
+    const data = [...cart.combo];
     const index = data.indexOf(foundItem);
     data.splice(index, 1);
     return {

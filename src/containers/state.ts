@@ -12,13 +12,21 @@ interface AccountState {
 
 const accountState = atom<AccountState>({
   key: "accountState",
+  // default: {
+  //   id: -1,
+  //   name: "",
+  //   email: "",
+  //   password: "",
+  //   address: "",
+  //   phone: "",
+  // },
   default: {
-    id: -1,
-    name: "",
-    email: "",
+    id: 1,
+    name: "Vu Nguyen",
+    email: "nguyenquocvu.work@gmail.com",
     password: "",
-    address: "",
-    phone: "",
+    address: "Saigon University",
+    phone: "0967852575",
   },
 });
 
@@ -42,5 +50,10 @@ const searchState = atom<SearchState>({
   },
 });
 
-export { accountState, cartState, searchState };
+const categoryState = atom<[]>({
+  key: "categoryState",
+  default: [],
+});
+
+export { accountState, cartState, searchState, categoryState };
 export type { AccountState, SearchState };

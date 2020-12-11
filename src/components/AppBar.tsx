@@ -238,7 +238,6 @@ const CustomizeAppBar = (): JSX.Element => {
               </IconButton>
 
               <Menu
-                id="menu-appbar"
                 anchorEl={anchorEl}
                 getContentAnchorEl={null}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -277,6 +276,17 @@ const CustomizeAppBar = (): JSX.Element => {
                   >
                     {signOut}
                   </Button>
+                  <Button
+                    style={{ marginLeft: "5px" }}
+                    variant="outlined"
+                    size="small"
+                    onClick={() => {
+                      history.push("/user");
+                    }}
+                    color="default"
+                  >
+                    My Profile
+                  </Button>
                 </MenuItem>
               </Menu>
             </div>
@@ -308,10 +318,10 @@ const CustomizeAppBar = (): JSX.Element => {
               </Button>
             </div>
           )}
-          <IconButton color="inherit">
+          <IconButton onClick={() => history.push("/cart")} color="inherit">
             <Badge badgeContent={getCartLength(cart)} color="error">
               {console.log(cart)}
-              <ShoppingCartRounded onClick={() => history.push("/cart")} />
+              <ShoppingCartRounded />
             </Badge>
           </IconButton>
         </Toolbar>
