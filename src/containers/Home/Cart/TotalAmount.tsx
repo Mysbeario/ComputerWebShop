@@ -13,7 +13,12 @@ import React from "react";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { useRecoilState } from "recoil";
 import { cartState } from "../../state";
-import { moneyFormater } from "../../../components/ReuseableFunction";
+import { useHistory } from "react-router-dom";
+import {
+  getDiscount,
+  getTotal,
+  moneyFormater,
+} from "../../../components/ReuseableFunction";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
@@ -24,25 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TotalAmount = (): JSX.Element => {
   const classes = useStyles();
+  const history = useHistory();
   const [cart] = useRecoilState(cartState);
-  const getTotal = () => {
-    let total = 0;
-    cart.product.forEach((item: any) => {
-      total = item.product.price * item.quantity + total;
-    });
-    cart.combo.forEach((item: any) => {
-      total = item.combo.originPrice * item.quantity + total;
-    });
-    return total;
-  };
-  const getDiscount = () => {
-    let total = 0;
-    cart.combo.forEach((item: any) => {
-      total =
-        (item.combo.originPrice - item.combo.price) * item.quantity + total;
-    });
-    return total;
-  };
 
   return (
     <Paper elevation={3} className={classes.paper}>
@@ -82,7 +70,20 @@ const TotalAmount = (): JSX.Element => {
           </ListItemSecondaryAction>
         </ListItem>
         <ListItem>
-          <Button variant="contained" size="large" fullWidth color="primary">
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => {
+              history.push("/checkout");
+            }}
+            fullWidth
+            disabled={
+              cart.product.length === 0 && cart.combo.length === 0
+                ? true
+                : false
+            }
+            color="primary"
+          >
             Go to check out
           </Button>
         </ListItem>

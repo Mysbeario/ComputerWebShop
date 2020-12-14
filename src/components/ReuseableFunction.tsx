@@ -1,3 +1,5 @@
+import { useRecoilState } from "recoil";
+import { cartState } from "../containers/state";
 import { CartState, Product, Combo } from "../interfaces";
 
 const moneyFormater = (number: any): any => {
@@ -162,6 +164,25 @@ const dropItem = (cart: any, item: Product): any => {
     };
   }
 };
+const getTotal = () => {
+  const [cart] = useRecoilState(cartState);
+  let total = 0;
+  cart.product.forEach((item: any) => {
+    total = item.product.price * item.quantity + total;
+  });
+  cart.combo.forEach((item: any) => {
+    total = item.combo.originPrice * item.quantity + total;
+  });
+  return total;
+};
+const getDiscount = () => {
+  const [cart] = useRecoilState(cartState);
+  let total = 0;
+  cart.combo.forEach((item: any) => {
+    total = (item.combo.originPrice - item.combo.price) * item.quantity + total;
+  });
+  return total;
+};
 
 export {
   moneyFormater,
@@ -172,4 +193,6 @@ export {
   addComboToCart,
   removeComboFromCart,
   dropCombo,
+  getTotal,
+  getDiscount,
 };

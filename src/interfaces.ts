@@ -8,6 +8,7 @@ interface Product {
 }
 interface Combo {
   id: number;
+  name: string;
   discount: number;
   price: number;
   originPrice: number;

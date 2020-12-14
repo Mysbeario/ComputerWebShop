@@ -35,6 +35,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { accountState, cartState, searchState } from "../containers/state";
 import CustomizeDrawer from "./CustomizeDrawer";
 import React, { useEffect, useState } from "react";
+import Cookies from "universal-cookie";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -134,6 +135,7 @@ const CustomizeAppBar = (): JSX.Element => {
   const setSearchState = useSetRecoilState(searchState);
   const setCart = useSetRecoilState(cartState);
   const open = Boolean(anchorEl);
+  const cookies = new Cookies();
 
   useEffect(() => {
     if (account.name && account.email && account.address && account.phone) {
@@ -161,6 +163,10 @@ const CustomizeAppBar = (): JSX.Element => {
     setSignOut("...");
     setTimeout(() => {
       setIsLoading(false);
+      cookies.remove("UserId", {
+        path: "/",
+        domain: "localhost",
+      });
 
       setAuth(!auth);
       setAccountState(defaultAccountState);
