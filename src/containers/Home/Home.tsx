@@ -19,7 +19,9 @@ import CustomizeCarousel from "../../components/CustomizeCarousel";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Axios from "axios";
 import { useRecoilState } from "recoil";
-import { cartState } from "../state";
+import { cartState, categoryState } from "../state";
+import { Product } from "../../interfaces";
+import Pricing from "./Pricing";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,15 +41,20 @@ const Home = (): JSX.Element => {
   const classes = useStyles();
   const url = "http://localhost:5000/api/product";
   const [product, setProduct] = useState([]);
+  const [category, setCategory] = useRecoilState(categoryState);
+  const urlCategory = "http://localhost:5000/api/category";
+
   const getProducts = async (): Promise<void> => {
     const respone = await Axios.get(url);
     setProduct(respone.data);
+    const categoryRespone = await Axios(urlCategory);
+    setCategory(categoryRespone.data);
   };
   useEffect(() => {
     getProducts().catch(() => {
       getProducts();
     });
-  }, [product]);
+  }, []);
 
   return (
     <div>
@@ -71,25 +78,15 @@ const Home = (): JSX.Element => {
               alt="Contemplative Reptile"
               height="92%"
               width="100%"
-              src="https://www.upsieutoc.com/images/2020/12/06/280x260-Uudailenovo-2020.png"
+              src="https://www.upsieutoc.com/images/2020/12/15/des.png"
               title="Contemplative Reptile"
             />
           </Grid>
+
           <Grid item md={9} sm={12}>
             <CustomizeCarousel />
           </Grid>
 
-          <Grid item md={12} sm={12}>
-            <Typography variant="h5" gutterBottom>
-              New Arrival
-            </Typography>
-            <Divider />
-          </Grid>
-          {product.map((each: any) => (
-            <Grid className={classes.grid} item md={3} sm={12}>
-              <HomePageProductCard {...each} />
-            </Grid>
-          ))}
           <Grid item md={12} sm={12}>
             <CardMedia
               component="img"
@@ -98,17 +95,32 @@ const Home = (): JSX.Element => {
               src="https://www.upsieutoc.com/images/2020/12/06/1200x65-Sale-me-ly-new.png"
               title="Contemplative Reptile"
             />
+            <Grid item md={12} sm={12}></Grid>
           </Grid>
-          <Grid item md={12} sm={12}>
-            <Typography variant="h5" gutterBottom>
-              On Sale
-            </Typography>
-            <Divider />
-          </Grid>
-          {product.map((each: any) => (
-            <Grid item md={3} sm={12}>
-              <HomePageProductCard {...each} />
-            </Grid>
+          {category.map((e: { name: string; id: number }) => (
+            <>
+              {[...product.filter((p: Product) => p.category.id === e.id)]
+                .length === 0 ? (
+                <></>
+              ) : (
+                <>
+                  {" "}
+                  <Grid item md={12} sm={12}>
+                    <Typography variant="h5" gutterBottom>
+                      {e.name}
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  {...product
+                    .filter((p: Product) => p.category.id === e.id)
+                    .map((each: any) => (
+                      <Grid className={classes.grid} item md={3} sm={12}>
+                        <HomePageProductCard {...each} />
+                      </Grid>
+                    ))}
+                </>
+              )}
+            </>
           ))}
         </Grid>
       </Container>

@@ -10,6 +10,8 @@ const Product = lazy(() => import("./Product/ProductDetails"));
 const SearchPage = lazy(() => import("../containers/Search/Search"));
 const CheckoutPage = lazy(() => import("../containers/Checkout/Checkout"));
 const UserPage = lazy(() => import("../containers/User/User"));
+const CategoryPage = lazy(() => import("../containers/Category/Search"));
+const ProfilePage = lazy(() => import("../containers/User/Profile"));
 
 const Routes = (): JSX.Element => {
   return (
@@ -27,7 +29,7 @@ const Routes = (): JSX.Element => {
         <Route exact path="/cart">
           <Cart />
         </Route>
-        <Route exact path="/product/:productId">
+        <Route exact path="/product/:productId/">
           <Product />
         </Route>
         <Route exact path="/search/">
@@ -38,6 +40,12 @@ const Routes = (): JSX.Element => {
         </Route>
         <Route exact path="/checkout">
           <CheckoutPage />
+        </Route>
+        <Route exact path="/profile">
+          <ProfilePage />
+        </Route>
+        <Route exact path="/category/:category/">
+          <CategoryPage />
         </Route>
       </Switch>
     </BrowserRouter>

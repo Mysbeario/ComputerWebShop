@@ -49,9 +49,28 @@ const HomePageProductCard = (props: Product): JSX.Element => {
   const classes = useStyles();
   let history = useHistory();
   const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const getCartLength = (cart: any) => {
+    let length = 0;
+    cart.product.map((item: any) => {
+      length = item.amount + length;
+    });
+    cart.combo.map((item: any) => {
+      length = item.amount + length;
+    });
+    return length;
+  };
 
   const handleAddButton = (item: Product) => {
+    const oldCartLength = getCartLength(cart);
     const newCart = addToCart(cart, item, 1);
+    const newCartLength = getCartLength(newCart);
+    if (oldCartLength === newCartLength) {
+      setMessage("Product is out of stock");
+    } else {
+      setMessage("Product is added to your cart");
+    }
     setCart(newCart);
     setOpen(true);
   };
@@ -62,7 +81,7 @@ const HomePageProductCard = (props: Product): JSX.Element => {
         open={open}
         autoHideDuration={1000}
         onClose={() => setOpen(false)}
-        message="Item is added to your cart!"
+        message={message}
         key={"top" + "center"}
       />
       <Paper elevation={2}>
@@ -115,12 +134,13 @@ const HomePageProductCard = (props: Product): JSX.Element => {
               size="medium"
               variant="contained"
               fullWidth
+              disabled={props.amount === 0 ? true : false}
               style={{ fontWeight: 700 }}
               color="secondary"
               onClick={() => handleAddButton(props)}
-              startIcon={<AddShoppingCartIcon />}
+              startIcon={props.amount !== 0 ? <AddShoppingCartIcon /> : <></>}
             >
-              Add
+              {props.amount === 0 ? "Out of stock" : "Add"}
             </Button>
           </CardActions>
         </Card>

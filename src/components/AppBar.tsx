@@ -27,6 +27,7 @@ import {
   ShoppingCartRounded,
   Face,
   Search,
+  Receipt,
   SearchRounded,
 } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -113,10 +114,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const getCartLength = (cart: any) => {
   let length = 0;
   cart.product.map((item: any) => {
-    length = item.quantity + length;
+    length = item.amount + length;
   });
   cart.combo.map((item: any) => {
-    length = item.quantity + length;
+    length = item.amount + length;
   });
   return length;
 };
@@ -187,6 +188,7 @@ const CustomizeAppBar = (): JSX.Element => {
   const handleKeyPress = (event: any): void => {
     if (event.key === "Enter") {
       setSearchState({ key: "search", value: event.target.value });
+      console.log(event.target.value);
       history.push({
         pathname: "/search",
       });
@@ -215,7 +217,7 @@ const CustomizeAppBar = (): JSX.Element => {
               height="35px"
             />
           </Button>
-          <div className={classes.search}>
+          {/* <div className={classes.search}>
             <div className={classes.searchIcon}>
               <Search />
             </div>
@@ -227,12 +229,23 @@ const CustomizeAppBar = (): JSX.Element => {
               }}
               onKeyPress={(e) => handleKeyPress(e)}
               inputProps={{ "aria-label": "search" }}
-            />
-          </div>
+            /> 
+          </div> */}
 
           <Typography variant="h6" className={classes.title}></Typography>
           {auth ? (
             <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={() => {
+                  history.push("/user");
+                }}
+                color="inherit"
+              >
+                <Receipt />
+              </IconButton>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -284,12 +297,12 @@ const CustomizeAppBar = (): JSX.Element => {
                   </Button>
                   <Button
                     style={{ marginLeft: "5px" }}
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                     onClick={() => {
-                      history.push("/user");
+                      history.push("/profile");
                     }}
-                    color="default"
+                    color="primary"
                   >
                     My Profile
                   </Button>
@@ -324,9 +337,14 @@ const CustomizeAppBar = (): JSX.Element => {
               </Button>
             </div>
           )}
+
+          <IconButton onClick={() => history.push("/search")} color="inherit">
+            <Badge color="error">
+              <Search />
+            </Badge>
+          </IconButton>
           <IconButton onClick={() => history.push("/cart")} color="inherit">
             <Badge badgeContent={getCartLength(cart)} color="error">
-              {console.log(cart)}
               <ShoppingCartRounded />
             </Badge>
           </IconButton>

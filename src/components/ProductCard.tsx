@@ -70,11 +70,13 @@ const ProductCard = (item: any): JSX.Element => {
   const history = useHistory();
   const theme = useTheme();
 
-  const onIncrease = () => {
-    const newCart: CartState = addToCart(cart, item.product, 1);
-    setCart(newCart);
+  const onIncrease = (item: any) => {
+    if (item.amount < item.product.amount) {
+      const newCart: CartState = addToCart(cart, item.product, 1);
+      setCart(newCart);
+    }
   };
-  const onDecrease = () => {
+  const onDecrease = (item: any) => {
     const newCart: CartState = removeFromCart(cart, item.product);
     setCart(newCart);
   };
@@ -105,15 +107,22 @@ const ProductCard = (item: any): JSX.Element => {
                 color="textSecondary"
                 component="div"
               >
+                Remain: {item.product.amount}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                color="textSecondary"
+                component="div"
+              >
                 {moneyFormater(item.product.price)}
               </Typography>
               <ButtonGroup variant="outlined" disableElevation color="default">
-                <Button onClick={() => onDecrease()}>-</Button>
-                <Button>{item.quantity}</Button>
-                <Button onClick={() => onIncrease()}>+</Button>
+                <Button onClick={() => onDecrease(item)}>-</Button>
+                <Button>{item.amount}</Button>
+                <Button onClick={() => onIncrease(item)}>+</Button>
               </ButtonGroup>
-              <IconButton>
-                <DeleteIcon color="action" onClick={() => onDrop()} />
+              <IconButton onClick={() => onDrop()}>
+                <DeleteIcon />
               </IconButton>
             </CardContent>
           </div>

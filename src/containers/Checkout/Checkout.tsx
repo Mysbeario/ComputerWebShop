@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
+  padding: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
@@ -66,6 +70,7 @@ const Checkout = function Checkout() {
   const history = useHistory();
   const [shippingInfo] = useRecoilState(shippingInfoState);
   const [cart, setCart] = useRecoilState(cartState);
+  const [receiptID, setReceipId] = useState();
 
   function getStepContent(step: number) {
     switch (step) {
@@ -80,18 +85,23 @@ const Checkout = function Checkout() {
     }
   }
 
-  // useEffect(() => {
-  //   if (!account.name && !account.email && !account.address && !account.phone) {
-  //     history.push("/login");
-  //   }
-  // }, [account]);
+  useEffect(() => {
+    if (!account.name && !account.email && !account.address && !account.phone) {
+      history.push("/login");
+    }
+  }, [account]);
 
   const handleCheckout = async (receipt: any): Promise<void> => {
     try {
-      await Axios.post("http://localhost:5000/api/receipt/", receipt, {
-        withCredentials: true,
-      });
+      const respone = await Axios.post(
+        "http://localhost:5000/api/receipt/",
+        receipt,
+        {
+          withCredentials: true,
+        }
+      );
       setCart({ product: [], combo: [] });
+      setReceipId(respone.data);
     } catch (e) {}
   };
 
@@ -105,7 +115,7 @@ const Checkout = function Checkout() {
           id: account.id,
         },
         details: cart.product,
-        combos: cart.product,
+        combos: cart.combo,
       };
       handleCheckout(receipt);
       console.log(receipt);
@@ -136,14 +146,31 @@ const Checkout = function Checkout() {
           <React.Fragment>
             {activeStep === steps.length ? (
               <React.Fragment>
-                <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
-                </Typography>
-                <Typography variant="subtitle1">
-                  Your order number is #2001539. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
-                </Typography>
+                {receiptID !== undefined ? (
+                  <>
+                    {" "}
+                    <Typography variant="h5" gutterBottom>
+                      Thank you for your order.
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      Your order number is #{receiptID}. We have emailed your
+                      order confirmation, and will send you an update when your
+                      order has shipped.
+                    </Typography>
+                    <Button
+                      className={classes.padding}
+                      onClick={() => history.push("/user")}
+                      variant="contained"
+                      size="large"
+                      color="primary"
+                      fullWidth
+                    >
+                      My Orders
+                    </Button>
+                  </>
+                ) : (
+                  <></>
+                )}
               </React.Fragment>
             ) : (
               <React.Fragment>

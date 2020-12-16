@@ -40,22 +40,22 @@ const Cart = (): JSX.Element => {
   const account = useRecoilValue(accountState);
   const [cart] = useRecoilState(cartState);
   const history = useHistory();
-  useEffect(() => {
-    if (!account.name && !account.email && !account.address && !account.phone) {
-      history.push("/login");
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (!account.name && !account.email && !account.address && !account.phone) {
+  //     history.push("/login");
+  //   }
+  // }, [account]);
 
   return (
     <div>
       <Appbar />
       <Container className={classes.pt}>
         <Grid container direction="row" spacing={3}>
-          <Grid item md={8} xs={12} className={classes.grid}>
+          <Grid item md={12} xs={12} className={classes.grid}>
             <MyOrder />
           </Grid>
           <Grid item md={4} xs={12} className={classes.grid}>
-            <MyProfile />
+            {/* <MyProfile /> */}
           </Grid>
         </Grid>
       </Container>

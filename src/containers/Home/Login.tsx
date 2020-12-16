@@ -136,10 +136,10 @@ const Login = (): JSX.Element => {
               inputRef={register({ required: true })}
               error={!!errors.password}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -149,7 +149,7 @@ const Login = (): JSX.Element => {
             >
               Sign In
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
                   Forgot password?
@@ -160,7 +160,7 @@ const Login = (): JSX.Element => {
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </form>
         </Paper>
         <Box mt={8}></Box>

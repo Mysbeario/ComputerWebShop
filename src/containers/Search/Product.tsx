@@ -69,7 +69,7 @@ const Product = (props: Product): JSX.Element => {
         <Card>
           <CardActionArea
             onClick={() => {
-              history.push("product/" + props.id);
+              history.push("/product/" + props.id);
             }}
           >
             <CardMedia
@@ -118,9 +118,17 @@ const Product = (props: Product): JSX.Element => {
               style={{ fontWeight: 700 }}
               color="secondary"
               onClick={() => handleAddButton(props)}
-              startIcon={<AddShoppingCartIcon />}
+              s
+              startIcon={props.amount !== 0 ? <AddShoppingCartIcon /> : <></>}
+              disabled={props.amount === 0 ? true : false}
+              //   style={{ fontWeight: 700 }}
+              //   color="secondary"
+              //   onClick={() => handleAddButton(props)}
+              //   startIcon={props.amount !== 0 ? <AddShoppingCartIcon /> : <></>}
+              // >
+              //   {props.amount === 0 ? "Out of stock" : "Add"}
             >
-              Add
+              {props.amount === 0 ? "Out of stock" : "Add"}
             </Button>
           </CardActions>
         </Card>

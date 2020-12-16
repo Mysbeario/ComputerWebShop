@@ -42,25 +42,26 @@ const CustomizeDrawer = ({
   setDrawerOpenState,
 }: Props): JSX.Element => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const url = "http://localhost:5000/api/category";
+  const [open, setOpen] = React.useState(true);
+
   const setSearchState = useSetRecoilState(searchState);
   const history = useHistory();
   const [category, setCategory] = useRecoilState(categoryState);
+  // const url = "http://localhost:5000/api/category";
 
-  const getCategory = async (): Promise<void> => {
-    const respone = await Axios(url);
-    setCategory(respone.data);
-  };
+  // const getCategory = async (): Promise<void> => {
+  //   const respone = await Axios(url);
+  //   setCategory(respone.data);
+  // };
 
-  useEffect(() => {
-    getCategory();
-  }, []);
+  // useEffect(() => {
+  //   getCategory();
+  // }, []);
 
-  const onCategoryClick = (categoryId: string) => {
+  const onCategoryClick = (categoryId: string, categoryName: string) => {
     setSearchState({ key: "category", value: categoryId });
     setDrawerOpenState();
-    history.push("/search");
+    history.push("/category/" + categoryId);
   };
 
   const handleClick = () => {
@@ -74,45 +75,44 @@ const CustomizeDrawer = ({
         onClose={(): void => setDrawerOpenState()}
       >
         <List>
-          <ListItem>
+          <ListItem button onClick={() => history.push("/")}>
             <img
               src="https://www.upsieutoc.com/images/2020/12/04/gamehub.png"
               height="35px"
             />
           </ListItem>
           <ListItem>
-            <Typography variant="body1">Enjoy Christmas Sale !</Typography>
+            <Typography variant="body1">2020 Sale Season</Typography>
           </ListItem>
         </List>
 
         <Divider />
         <List component="nav" className={classes.root}>
-          <ListItem button>
-            <ListItemText primary="Home" />
+          <ListItem
+            button
+            onClick={() => {
+              console.log("click!");
+              history.push("/");
+            }}
+          >
+            <ListItemText primary="Home" secondary="Gamehub.com" />
           </ListItem>
 
           <ListItem button>
-            <ListItemText primary="Combo" />
+            <ListItemText
+              primary="All products"
+              onClick={() => {
+                console.log("click!");
+                history.push("/search");
+              }}
+            />
           </ListItem>
-          <Divider />
-          <ListItem button onClick={handleClick}>
-            <ListItemText primary="Category" />
-            {open ? <ExpandLess /> : <ExpandMore />}
+          <ListItem button>
+            <ListItemText
+              primary="Promotion"
+              onClick={() => history.push("/")}
+            />
           </ListItem>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              {category.map((c: any) => (
-                <ListItem key={c.id} button className={classes.nested}>
-                  <ListItemText
-                    primary={c.name}
-                    onClick={() => {
-                      onCategoryClick(c.id);
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </Collapse>
         </List>
       </Drawer>
     </div>

@@ -74,7 +74,7 @@ const ProductDetails = (): JSX.Element => {
 
   const getProductDetails = async (): Promise<void> => {
     const { data } = await Axios.get(url);
-    console.log(data);
+
     setProduct(data);
   };
 
@@ -82,7 +82,7 @@ const ProductDetails = (): JSX.Element => {
     getProductDetails().catch((e) => {
       getProductDetails();
     });
-  }, [product]);
+  }, []);
   return (
     <>
       <AppBar />

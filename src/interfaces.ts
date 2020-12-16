@@ -3,6 +3,10 @@ interface Product {
   name: string;
   price: number;
   description: string;
+  category: {
+    id: number;
+    name: string;
+  };
   amount: number;
   image: string;
 }
@@ -16,11 +20,11 @@ interface Combo {
 }
 interface ProductInCart {
   product: Product;
-  quantity: number;
+  amount: number;
 }
 interface ComboInCart {
   combo: Combo;
-  quantity: number;
+  amount: number;
 }
 interface CartState {
   product: ProductInCart[];

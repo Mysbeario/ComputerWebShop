@@ -5,8 +5,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Grid from "@material-ui/core/Grid";
-import { useRecoilState } from "recoil";
 import { useHistory } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import { cartState, shippingInfoState } from "../state";
 import {
   getDiscount,
@@ -42,6 +42,18 @@ const payments = [
   { name: "Expiry date", detail: "04/2024" },
 ];
 
+const getComboDiscount = (receipt: any) => {
+  let quantity = 0;
+  let totalOriginalCost = 0;
+  let price = 0;
+  receipt.combos.map((combo: any) => {
+    quantity += combo.amount;
+    totalOriginalCost += combo.combo.originPrice;
+    price += combo.combo.price;
+  });
+
+  return quantity * (totalOriginalCost - price);
+};
 const useStyles = makeStyles((theme) => ({
   listItem: {
     padding: theme.spacing(1, 0),
@@ -54,18 +66,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Review = () => {
+const OrderReview = (receipt: any) => {
   const classes = useStyles();
+  const history = useHistory();
   const [cart] = useRecoilState(cartState);
   const [shippingInfo] = useRecoilState(shippingInfoState);
-  const history = useHistory();
 
   return (
     <React.Fragment>
-      <Typography variant="h6" gutterBottom>
-        Order summary
-      </Typography>
-      {cart.combo.length !== 0 ? (
+      {receipt.combos.length !== 0 ? (
         <div>
           <Typography
             variant="h6"
@@ -81,7 +90,7 @@ const Review = () => {
         <></>
       )}
       <List disablePadding></List>
-      {cart.combo.map((comboInCart) => (
+      {receipt.combos.map((comboInCart: any) => (
         <ListItem className={classes.listItem} key={comboInCart.combo.id}>
           <ListItemText
             primary={comboInCart.combo.name}
@@ -92,7 +101,7 @@ const Review = () => {
           </Typography>
         </ListItem>
       ))}
-      {cart.product.length != 0 ? (
+      {receipt.details.length != 0 ? (
         <div>
           {" "}
           <Typography
@@ -110,14 +119,14 @@ const Review = () => {
       )}
 
       <List disablePadding>
-        {cart.product.map((productInCart) => (
+        {receipt.details.map((productInCart: any) => (
           <ListItem
-            className={classes.listItem}
-            key={productInCart.product.id}
             button
             onClick={() => {
               history.push("/product/" + productInCart.product.id);
             }}
+            className={classes.listItem}
+            key={productInCart.product.id}
           >
             <ListItemAvatar>
               <Avatar
@@ -143,13 +152,13 @@ const Review = () => {
         <ListItem className={classes.listItem}>
           <ListItemText primary="Discount" />
           <Typography variant="subtitle1" className={classes.total}>
-            -{moneyFormater(getDiscount())}
+            -{moneyFormater(getComboDiscount(receipt))}
           </Typography>
         </ListItem>
         <ListItem className={classes.listItem}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" className={classes.total}>
-            {moneyFormater(getTotal() - getDiscount())}
+            {moneyFormater(receipt.totalCost)}
           </Typography>
         </ListItem>
       </List>
@@ -166,9 +175,9 @@ const Review = () => {
           >
             Shipping details
           </Typography>
-          <Typography gutterBottom>{shippingInfo.name}</Typography>
-          <Typography gutterBottom>{shippingInfo.address}</Typography>
-          <Typography gutterBottom>{shippingInfo.phone}</Typography>
+          <Typography gutterBottom>{receipt.customer.name}</Typography>
+          <Typography gutterBottom>{receipt.customer.address}</Typography>
+          <Typography gutterBottom>{receipt.customer.phone}</Typography>
         </Grid>
         {/* <Grid item container direction="column" xs={12} sm={6}>
           <Typography variant="h6" gutterBottom className={classes.title}>
@@ -191,4 +200,4 @@ const Review = () => {
     </React.Fragment>
   );
 };
-export default Review;
+export default OrderReview;

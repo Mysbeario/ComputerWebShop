@@ -36,6 +36,7 @@ import {
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { cartState } from "../state";
+import { Avatar } from "@material-ui/core";
 
 const initValue = {
   id: 0,
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     cover: {
       width: 151,
+      padding: theme.spacing(4),
     },
     details: {
       display: "flex",
@@ -81,8 +83,10 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
   const [cart, setCart] = useRecoilState(cartState);
 
   const getProductCombo = async (): Promise<void> => {
-    const { data } = await Axios.get(url);
-    setCombo(data);
+    setTimeout(async () => {
+      const { data } = await Axios.get(url);
+      setCombo(data);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -91,11 +95,10 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
     });
   }, [combo]);
 
-  const handleAddButton = (cart: CartState, combo: Combo, quantity: number) => {
-    const newCart = addComboToCart(cart, combo, quantity);
+  const handleAddButton = (cart: CartState, combo: Combo, amount: number) => {
+    const newCart = addComboToCart(cart, combo, amount);
     setCart(newCart);
     setOpen(true);
-    console.log(newCart);
   };
   return combo.length != 0 ? (
     <Paper elevation={0} className={classes.paper}>
@@ -149,20 +152,25 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
               <AccordionDetails style={{ display: "block", width: "100%" }}>
                 <Button
                   size="medium"
-                  variant="contained"
+                  variant="outlined"
                   color="primary"
+                  fullWidth
+                  gutterBottom
                   style={{ margin: "8px,12px" }}
                   onClick={() => handleAddButton(cart, each, 1)}
                   startIcon={<AddShoppingCartIcon />}
                 >
                   Add Combo
                 </Button>
-                <Typography variant="h6" component="h4" gutterBottom>
-                  Included Item:
-                </Typography>
+                <Typography
+                  variant="body2"
+                  style={{ fontWeight: "bolder" }}
+                  component="h6"
+                  gutterBottom
+                ></Typography>
                 {each.details.map((item: any) => {
                   return (
-                    <Box>
+                    <Box border borderColor="textSecondary">
                       <Card className={classes.root} elevation={0}>
                         <CardMedia
                           className={classes.cover}
@@ -174,12 +182,21 @@ const RelateCombo = ({ productId }: { productId: string }): JSX.Element => {
                           }
                           component="img"
                         />
+
                         <div className={classes.details}>
                           <CardContent>
-                            <Typography component="div" variant="h6">
+                            <Typography
+                              component="div"
+                              style={{ fontWeight: "bolder" }}
+                              variant="body2"
+                            >
                               {"#" + number++ + ". "}
                             </Typography>
-                            <Typography component="div" variant="h6">
+                            <Typography
+                              component="div"
+                              style={{ fontWeight: "bolder" }}
+                              variant="body2"
+                            >
                               {item.product.name}
                             </Typography>
                             <Typography

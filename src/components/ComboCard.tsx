@@ -77,6 +77,7 @@ const ComboCart = (item: any): JSX.Element => {
 
   const onIncrease = () => {
     const newCart: CartState = addComboToCart(cart, item.combo, 1);
+    console.log(cart);
     setCart(newCart);
   };
   const onDecrease = () => {
@@ -93,9 +94,6 @@ const ComboCart = (item: any): JSX.Element => {
         <Card className={classes.root} elevation={0}>
           <Carousel>
             {item.combo.details.map((item: any) => {
-              console.log("item");
-              console.log(item);
-
               return (
                 <CardMedia
                   className={classes.cover}
@@ -123,8 +121,8 @@ const ComboCart = (item: any): JSX.Element => {
               </Typography>
               <ButtonGroup variant="outlined" disableElevation color="default">
                 <Button onClick={() => onDecrease()}>-</Button>
-                <Button>{item.quantity}</Button>
-                <Button onClick={() => onIncrease()}>+</Button>
+                <Button>{item.amount}</Button>
+                <Button onClick={(item: any) => onIncrease()}>+</Button>
               </ButtonGroup>
               <IconButton onClick={() => onDrop()}>
                 <DeleteIcon color="action" />

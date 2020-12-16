@@ -176,7 +176,8 @@ const Login = (): JSX.Element => {
             />
             {errors.password && (
               <Typography align="center" color="primary">
-                The password yo provided must have more than 6 characters{" "}
+                Use 8 or more characters with a mix of letters, numbers &
+                symbols
               </Typography>
             )}
             <TextField

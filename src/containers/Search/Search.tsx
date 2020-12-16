@@ -28,9 +28,6 @@ import Autocomplete from "@material-ui/lab/Autocomplete/Autocomplete";
 import { useForm } from "react-hook-form";
 import { SearchRounded } from "@material-ui/icons";
 
-interface IState {
-  query?: string;
-}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     grid: {
@@ -44,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       padding: theme.spacing(2),
+    },
+    m: {
+      marginTop: theme.spacing(4),
     },
   })
 );
@@ -67,23 +67,44 @@ const Search = (): JSX.Element => {
   const [searchString, setSearchString] = useRecoilState(searchState);
   const [product, setProduct] = useState([]);
   const { register, errors, handleSubmit } = useForm<SearchInfo>();
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [selectedCategory, setSelectedCategory]: any = useState();
   const [value, setValue] = React.useState<number[]>([10000, 12500000]);
   const [category, setCategory] = useRecoilState(categoryState);
-  useEffect(() => {
-    (async () => {
-      const respone = await Axios.get(
-        url + "?" + searchString.key + "=" + searchString.value
-      );
-      console.log(respone);
-      console.log(url + searchString.key + "=" + searchString.value);
-      setProduct(respone.data);
-    })();
-  }, [searchString]);
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setValue(newValue as number[]);
+
+  const searchFunction = async () => {
+    console.log("search: " + searchString.value);
+    const respone = await Axios.get(
+      url + "?" + searchString.key + "=" + searchString.value
+    );
+    console.log(respone);
+    console.log(url + searchString.key + "=" + searchString.value);
+    setProduct(respone.data);
   };
 
+  const getCategory = async (): Promise<void> => {
+    const categoryRespone = await Axios("http://localhost:5000/api/category");
+    setCategory(categoryRespone.data);
+  };
+  useEffect(() => {
+    console.log(category);
+    console.log(category === []);
+    setTimeout(searchFunction, 500);
+    if (category.length === 0) {
+      console.log("vo");
+      getCategory();
+    }
+  }, []);
+
+  const formatCategory = (categoryId: any) => {
+    var name = "";
+    category.forEach((c: any) => {
+      if (c.id == categoryId) {
+        console.log(categoryId + " = " + c.id);
+        name = c.name;
+      }
+    });
+    return name;
+  };
   const handleUpdate = async (searchInfo: SearchInfo): Promise<void> => {
     let newURL = url + "?";
     if (searchInfo.content) {
@@ -100,7 +121,7 @@ const Search = (): JSX.Element => {
     }
 
     const product = await Axios.get(newURL);
-    //setSearchString({ key: "", value: "" });
+    setSearchString({ key: "", value: "" });
     setProduct(product.data);
 
     console.log(newURL);
@@ -119,17 +140,21 @@ const Search = (): JSX.Element => {
                 fullWidth
                 type="text"
                 name="content"
-                label="Content"
+                label="Search"
                 inputRef={register({ required: false })}
                 variant="outlined"
                 color="secondary"
               />
             </Grid>
+
             <Grid item md={3} sm={12}>
               <Autocomplete
                 options={category}
                 getOptionLabel={(option: any) => option.name}
-                onChange={(e, data) => setSelectedCategory(data.id)}
+                onChange={(e, data) => {
+                  if (data !== null) setSelectedCategory(data.id);
+                  else setSelectedCategory(undefined);
+                }}
                 renderInput={(params) => (
                   <TextField {...params} label="Category" variant="outlined" />
                 )}
@@ -171,9 +196,31 @@ const Search = (): JSX.Element => {
                 Find
               </Button>
             </Grid>
+            {/* <Grid item md={1} sm={12}>
+              <Button
+                size="large"
+                variant="contained"
+                fullWidth
+                type="button"
+                onClick={() => {
+                  searchFunction();
+                }}
+                style={{ fontWeight: 700, height: "100%" }}
+                color="secondary"
+                //startIcon={<SearchRounded />}
+              >
+                Refresh
+              </Button>
+            </Grid> */}
           </Grid>
         </form>
+        <Divider className={classes.m} />
         <Grid container spacing={4}>
+          <Grid item md={12} sm={12}>
+            <Typography variant="h5">
+              {formatCategory(searchString.value)}
+            </Typography>
+          </Grid>
           <Grid item md={12} sm={12}>
             {/* <Typography variant="h6">
               {SearchTextFormater(

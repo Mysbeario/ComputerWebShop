@@ -38,29 +38,47 @@ const useStyles = makeStyles({
 
 const DetailsCard = ({ product }: any): JSX.Element => {
   const classes = useStyles();
-  const [quantity, setQuantity] = useState<number>(1);
+  const [amount, setQuantity] = useState<number>(1);
   const [cart, setCart] = useRecoilState(cartState);
   const [open, setOpen] = useState(false);
   const history = useHistory();
   const theme = useTheme();
+  const [message, setMessage] = useState("");
+  const getCartLength = (cart: any) => {
+    let length = 0;
+    cart.product.map((item: any) => {
+      length = item.amount + length;
+    });
+    cart.combo.map((item: any) => {
+      length = item.amount + length;
+    });
+    return length;
+  };
 
   const AddToCarthandle = () => {
-    const newCart: CartState = addToCart(cart, product, quantity);
+    const newCart: CartState = addToCart(cart, product, amount);
+    const oldCartLength = getCartLength(cart);
+    const newCartLength = getCartLength(newCart);
+    if (oldCartLength === newCartLength) {
+      setMessage("Product is out of stock");
+    } else {
+      setMessage("Product is added to your cart");
+    }
     setCart(newCart);
     setOpen(true);
   };
 
   const onBuyHandle = () => {
-    const newCart: CartState = addToCart(cart, product, quantity);
+    const newCart: CartState = addToCart(cart, product, amount);
     setCart(newCart);
     setOpen(true);
     history.push("/cart");
   };
 
   const onQuantityChange = (command: boolean): void => {
-    if (quantity === 1 && command === false) {
+    if (amount === 1 && command === false) {
     } else {
-      command ? setQuantity(quantity + 1) : setQuantity(quantity - 1);
+      command ? setQuantity(amount + 1) : setQuantity(amount - 1);
     }
   };
   return (
@@ -70,33 +88,41 @@ const DetailsCard = ({ product }: any): JSX.Element => {
         open={open}
         autoHideDuration={1000}
         onClose={() => setOpen(false)}
-        message="Item is added to your cart!"
+        message={message}
         key={"top" + "center"}
       />
       <Card className={classes.root} elevation={0}>
         <CardContent>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h5" gutterBottom>
             {product.name}
           </Typography>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h6" gutterBottom>
             {moneyFormater(product.price)}
           </Typography>
-          <Typography variant="h6" color="textSecondary">
-            {product.description}
+          <Typography
+            color={product.amount === 0 ? "primary" : "textSecondary"}
+            variant="body1"
+            gutterBottom
+          >
+            {product.amount === 0
+              ? "Out of stock"
+              : "Remain: " + product.amount}
           </Typography>
+          <Typography variant="body2">{product.description}</Typography>
           <Typography variant="h4" gutterBottom>
-            <ButtonGroup
+            {/* <ButtonGroup
               color="default"
               aria-label="outlined primary button group"
             >
               <Button onClick={() => onQuantityChange(false)}>-</Button>
-              <Button>{quantity}</Button>
+              <Button>{amount}</Button>
               <Button onClick={() => onQuantityChange(true)}>+</Button>
-            </ButtonGroup>
+            </ButtonGroup> */}
           </Typography>
           <CardActions>
             <Button
               size="large"
+              disabled={product.amount === 0 ? true : false}
               fullWidth
               variant="contained"
               color="primary"
@@ -106,12 +132,13 @@ const DetailsCard = ({ product }: any): JSX.Element => {
             </Button>
             <Button
               size="large"
+              disabled={product.amount === 0 ? true : false}
               fullWidth
               variant="outlined"
               color="primary"
               onClick={() => AddToCarthandle()}
             >
-              Add to cart
+              {product.amount === 0 ? "Out of stock" : "Add to cart"}
             </Button>
           </CardActions>
           <Typography variant="h5"></Typography>
