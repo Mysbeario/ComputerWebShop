@@ -18,6 +18,8 @@ import {
   Divider,
   CardActionArea,
   Box,
+  List,
+  ListItem,
 } from "@material-ui/core";
 import {
   moneyFormater,
@@ -109,6 +111,18 @@ const ComboCart = (item: any): JSX.Element => {
           </Carousel>
           <div className={classes.details}>
             <CardContent>
+              {/* <List>
+            
+              {item.combo.details.map((item: any) => {
+                
+                return (
+                  <ListItem>
+                    { ". "+ item.product.name}
+                
+                  </ListItem>
+                )
+              }
+              </List> */}
               <Typography component="div" variant="h6">
                 {item.combo.name}
               </Typography>
@@ -119,6 +133,7 @@ const ComboCart = (item: any): JSX.Element => {
               >
                 {moneyFormater(item.combo.price)}
               </Typography>
+
               <ButtonGroup variant="outlined" disableElevation color="default">
                 <Button onClick={() => onDecrease()}>-</Button>
                 <Button>{item.amount}</Button>

@@ -102,7 +102,10 @@ const Checkout = function Checkout() {
       );
       setCart({ product: [], combo: [] });
       setReceipId(respone.data);
-    } catch (e) {}
+    } catch (e) {
+      alert("Uii ! Some products is out of stock ! Please recheck your cart");
+      history.push("/cart");
+    }
   };
 
   const handleNext = (activeStep: number) => {
