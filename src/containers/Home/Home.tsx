@@ -68,7 +68,7 @@ const Home = (): JSX.Element => {
               alt="Contemplative Reptile"
               height="65"
               width="100%"
-              src="https://www.upsieutoc.com/images/2020/12/04/Pre-oder-Apple-chip-M1-2020-1200x65.jpg"
+              src={require("../../assets/top-banner.png")}
               title="Contemplative Reptile"
             />
           </Grid>
@@ -78,7 +78,7 @@ const Home = (): JSX.Element => {
               alt="Contemplative Reptile"
               height="92%"
               width="100%"
-              src="https://www.upsieutoc.com/images/2020/12/15/des.png"
+              src={require("../../assets/side-banner.png")}
               title="Contemplative Reptile"
             />
           </Grid>
@@ -92,7 +92,7 @@ const Home = (): JSX.Element => {
               component="img"
               alt="Contemplative Reptile"
               height="65"
-              src="https://www.upsieutoc.com/images/2020/12/06/1200x65-Sale-me-ly-new.png"
+              src={require("../../assets/below-banner.png")}
               title="Contemplative Reptile"
             />
             <Grid item md={12} sm={12}></Grid>

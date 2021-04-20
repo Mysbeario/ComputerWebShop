@@ -212,10 +212,7 @@ const CustomizeAppBar = (): JSX.Element => {
               history.push("/");
             }}
           >
-            <img
-              src="https://www.upsieutoc.com/images/2020/12/04/gamehub.png"
-              height="35px"
-            />
+            <img src={require("../assets/logo.png")} height="35px" />
           </Button>
           {/* <div className={classes.search}>
             <div className={classes.searchIcon}>

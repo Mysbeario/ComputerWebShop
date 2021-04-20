@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(8),
     },
     paper: {
-      padding: theme.spacing(2),
+      borderRadius: "18px",
     },
     card: {
       minHeight: "400px",
@@ -85,7 +85,7 @@ const HomePageProductCard = (props: Product): JSX.Element => {
         key={"top" + "center"}
       />
       <Paper elevation={2}>
-        <Card>
+        <Card className={classes.paper}>
           <CardActionArea
             onClick={() => {
               history.push("product/" + props.id);

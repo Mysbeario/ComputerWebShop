@@ -7,15 +7,14 @@ const moneyFormater = (number: any): any => {
     style: "currency",
     currency: "VND",
   });
-
   return formatter.format(number);
 };
+
 const formatString = (number: any): any => {
   var formatter = new Intl.NumberFormat("vn-VN", {
     style: "currency",
     currency: "VND",
   });
-
   return formatter.format(number);
 };
 

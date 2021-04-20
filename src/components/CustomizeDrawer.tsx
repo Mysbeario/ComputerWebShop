@@ -76,10 +76,7 @@ const CustomizeDrawer = ({
       >
         <List>
           <ListItem button onClick={() => history.push("/")}>
-            <img
-              src="https://www.upsieutoc.com/images/2020/12/04/gamehub.png"
-              height="35px"
-            />
+            <img src={require("../assets/logo.png")} height="35px" />
           </ListItem>
           <ListItem>
             <Typography variant="body1">2020 Sale Season</Typography>

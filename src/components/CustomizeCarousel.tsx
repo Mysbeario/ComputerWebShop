@@ -34,7 +34,7 @@ const CustomizeCarousel = (): JSX.Element => {
           alt="Contemplative Reptile"
           height="360"
           width="720"
-          src="https://www.upsieutoc.com/images/2020/12/04/720x360-sale-me-ly.png"
+          src={require("../assets/banner1.png")}
           title="Contemplative Reptile"
         />
         <CardMedia
@@ -42,7 +42,7 @@ const CustomizeCarousel = (): JSX.Element => {
           alt="Contemplative Reptile"
           height="360"
           width="720"
-          src="https://www.upsieutoc.com/images/2020/12/04/720x360-Macbook-Pro-2019-256GB-1512.png"
+          src={require("../assets/banner2.png")}
           title="Contemplative Reptile"
         />
       </Carousel>
