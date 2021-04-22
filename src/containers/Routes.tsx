@@ -12,6 +12,7 @@ const CheckoutPage = lazy(() => import("../containers/Checkout/Checkout"));
 const UserPage = lazy(() => import("../containers/User/User"));
 const CategoryPage = lazy(() => import("../containers/Category/Search"));
 const ProfilePage = lazy(() => import("../containers/User/Profile"));
+const TestPage = lazy(() => import("../containers/Test/test"));
 
 const Routes = (): JSX.Element => {
   return (
@@ -43,6 +44,9 @@ const Routes = (): JSX.Element => {
         </Route>
         <Route exact path="/profile">
           <ProfilePage />
+        </Route>
+        <Route exact path="/test">
+          <TestPage />
         </Route>
         <Route exact path="/category/:category/">
           <CategoryPage />

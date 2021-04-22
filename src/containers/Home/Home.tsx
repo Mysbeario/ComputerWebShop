@@ -1,16 +1,9 @@
 import {
   Container,
   Grid,
-  Paper,
   Typography,
   Divider,
-  List,
-  Box,
-  ListItem,
-  ListItemText,
   CardMedia,
-  LinearProgress,
-  Snackbar,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import HomePageProductCard from "./HomePageProductCard";
@@ -21,7 +14,6 @@ import Axios from "axios";
 import { useRecoilState } from "recoil";
 import { cartState, categoryState } from "../state";
 import { Product } from "../../interfaces";
-import Pricing from "./Pricing";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 const Home = (): JSX.Element => {
   const classes = useStyles();
   const url = "http://localhost:5000/api/product";
@@ -50,6 +43,7 @@ const Home = (): JSX.Element => {
     const categoryRespone = await Axios(urlCategory);
     setCategory(categoryRespone.data);
   };
+
   useEffect(() => {
     getProducts().catch(() => {
       getProducts();

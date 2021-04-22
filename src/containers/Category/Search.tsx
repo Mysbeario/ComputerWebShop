@@ -15,14 +15,12 @@ import {
   Button,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import AppBar from "../../components/AppBar";
-import CustomizeCarousel from "../../components/CustomizeCarousel";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Axios from "axios";
 import { useParams } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { categoryState, searchState } from "../state";
+import { categoryState } from "../state";
 import Product from "../Search/Product";
 
 interface IState {

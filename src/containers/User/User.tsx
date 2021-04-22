@@ -1,14 +1,7 @@
 import {
   Container,
   Grid,
-  Paper,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-  Typography,
-  Divider,
-  Button,
+
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import Appbar from "../../components/AppBar";
@@ -39,12 +32,7 @@ const Cart = (): JSX.Element => {
   const classes = useStyles();
   const account = useRecoilValue(accountState);
   const [cart] = useRecoilState(cartState);
-  const history = useHistory();
-  // useEffect(() => {
-  //   if (!account.name && !account.email && !account.address && !account.phone) {
-  //     history.push("/login");
-  //   }
-  // }, [account]);
+
 
   return (
     <div>
@@ -55,7 +43,6 @@ const Cart = (): JSX.Element => {
             <MyOrder />
           </Grid>
           <Grid item md={4} xs={12} className={classes.grid}>
-            {/* <MyProfile /> */}
           </Grid>
         </Grid>
       </Container>

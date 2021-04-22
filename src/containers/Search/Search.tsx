@@ -90,7 +90,6 @@ const Search = (): JSX.Element => {
     console.log(category === []);
     setTimeout(searchFunction, 500);
     if (category.length === 0) {
-      console.log("vo");
       getCategory();
     }
   }, []);
@@ -215,11 +214,10 @@ const Search = (): JSX.Element => {
           </Grid>
         </form>
         <Divider className={classes.m} />
+
         <Grid container spacing={4}>
           <Grid item md={12} sm={12}>
-            <Typography variant="h5">
-              {formatCategory(searchString.value)}
-            </Typography>
+            <Typography variant="h5"> </Typography>
           </Grid>
           <Grid item md={12} sm={12}>
             {/* <Typography variant="h6">

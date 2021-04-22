@@ -20,14 +20,7 @@ const accountState = atom<AccountState>({
     address: "",
     phone: "",
   },
-  // default: {
-  //   id: 1,
-  //   name: "Vu Nguyen",
-  //   email: "nguyenquocvu.work@gmail.com",
-  //   password: "",
-  //   address: "Saigon University",
-  //   phone: "0967852575",
-  // },
+
 });
 
 interface ShippingInfoState {
@@ -68,6 +61,19 @@ const searchState = atom<SearchState>({
 const categoryState = atom<[]>({
   key: "categoryState",
   default: [],
+});
+
+interface AccountState1 {
+  name: string;
+  age: number;
+}
+
+export const Account = atom<AccountState1>({
+  key: "accountState",
+  default: {
+    name: "",
+    age: 0,
+  },
 });
 
 export {

@@ -2,7 +2,8 @@ import React from "react";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 const Loading = (): JSX.Element => {
-  return <></>;
+  return <>
+  </>;
 };
 
 export default Loading;

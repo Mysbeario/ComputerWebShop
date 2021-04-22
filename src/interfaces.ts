@@ -10,6 +10,7 @@ interface Product {
   amount: number;
   image: string;
 }
+
 interface Combo {
   id: number;
   name: string;

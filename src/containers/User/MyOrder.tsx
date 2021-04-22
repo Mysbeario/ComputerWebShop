@@ -113,7 +113,7 @@ const OnCartList = (): JSX.Element => {
   }, []);
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [chosenReceipt, setChosenReceipt] = React.useState({});
+  const [chosenReceipt, setChosenReceipt] = React.useState({ status: 0 });
 
   const handleClose = () => {
     setOpen(false);
@@ -210,7 +210,10 @@ const OnCartList = (): JSX.Element => {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-        <DialogTitle>Order Summary</DialogTitle>
+        <DialogTitle>
+          Order Summary -{" "}
+          <Button> {getReceiptState(chosenReceipt.status)}</Button>
+        </DialogTitle>
         <DialogContent dividers>
           <OrderReview {...chosenReceipt} />
         </DialogContent>
