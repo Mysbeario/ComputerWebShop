@@ -1,5 +1,5 @@
-import { atom, selector } from "recoil";
-import { CartState, Product } from "../interfaces";
+import { atom } from "recoil";
+import { CartState } from "../interfaces";
 
 interface AccountState {
   id: number;
@@ -20,7 +20,6 @@ const accountState = atom<AccountState>({
     address: "",
     phone: "",
   },
-
 });
 
 interface ShippingInfoState {
